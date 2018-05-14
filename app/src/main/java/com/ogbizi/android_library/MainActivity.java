@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.ogbizi.formable.SwappableImageView;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -97,5 +99,13 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onNextClick(View v) {
+        ((SwappableImageView)findViewById(R.id.img_swappable)).showNext(false);
+    }
+
+    public void onPrevClick(View v) {
+        ((SwappableImageView)findViewById(R.id.img_swappable)).showPrevious(false);
     }
 }
