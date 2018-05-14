@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SwappableImageView">
+        <attr name="loop" format="boolean" />
+        <attr name="src" format="reference"/>
+        <attr name="nextSrc" format="reference"/>
+        <attr name="prevSrc" format="reference"/>
+    </declare-styleable>
+</resources>
