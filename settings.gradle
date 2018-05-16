@@ -1,1 +1,1 @@
-include ':app', ':formable'
+include ':app', ':plucky'

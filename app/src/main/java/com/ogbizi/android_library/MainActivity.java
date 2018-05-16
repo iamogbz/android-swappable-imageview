@@ -3,6 +3,7 @@ package com.ogbizi.android_library;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,10 +14,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.ogbizi.formable.SwappableImageView;
+import com.ogbizi.plucky.SwappableImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    SwappableImageView swappableImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        swappableImageView = findViewById(R.id.img_swappable);
     }
 
     @Override
@@ -102,10 +107,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void onNextClick(View v) {
-        ((SwappableImageView)findViewById(R.id.img_swappable)).showNext(false);
+        swappableImageView.showNext(false);
     }
 
     public void onPrevClick(View v) {
-        ((SwappableImageView)findViewById(R.id.img_swappable)).showPrevious(false);
+        swappableImageView.showPrevious(false);
+    }
+
+    public void onToggleSwitch(View v) {
+        SwitchCompat s = (SwitchCompat) v;
+        swappableImageView.setLooping(s.isChecked());
     }
 }

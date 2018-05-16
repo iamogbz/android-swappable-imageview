@@ -1,9 +1,9 @@
-package com.ogbizi.formable;
+package com.ogbizi.plucky;
 
 import android.view.View;
 import android.widget.ImageView;
 
-import com.ogbizi.formable.SwappableImageView.Behavior;
+import com.ogbizi.plucky.SwappableImageView.Behavior;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.ogbizi.formable;
+package com.ogbizi.plucky;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
