@@ -46,15 +46,17 @@ public class SwappableImageView extends RelativeLayout {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SwappableImageView, 0, 0);
-        try {
-            setNext(a.getResourceId(R.styleable.SwappableImageView_src, 0));
-            setPrevious(a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
-            setNext(a.getResourceId(R.styleable.SwappableImageView_nextSrc, 0));
-            shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop, false);
-            Timber.d("looping: %s", shouldLoop);
-        } finally {
-            a.recycle();
+        if(attrs != null) {
+            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SwappableImageView, 0, 0);
+            try {
+                setNext(a.getResourceId(R.styleable.SwappableImageView_src, 0));
+                setPrevious(a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
+                setNext(a.getResourceId(R.styleable.SwappableImageView_nextSrc, 0));
+                shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop, false);
+                Timber.d("looping: %s", shouldLoop);
+            } finally {
+                a.recycle();
+            }
         }
         animator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -152,8 +154,7 @@ public class SwappableImageView extends RelativeLayout {
     public void setDrawables(int index, @DrawableRes Integer... drawables) {
         mDrawables.clear();
         mDrawables.addAll(Arrays.asList(drawables));
-        currentIndex = Math.max(0, Math.min(index, mDrawables.size() - 1));
-        dispatch(MESSAGE.RESET);
+        setCurrentIndex(index);
     }
 
     /**
