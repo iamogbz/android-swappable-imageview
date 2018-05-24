@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -37,27 +38,55 @@ public class SwappableImageView extends RelativeLayout {
         this(context, attrs, 0);
     }
 
-    public SwappableImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SwappableImageView(Context context, AttributeSet attrs,
+                              int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        setUp(context, attrs);
+        init(context, attrs);
     }
 
-    private void setUp(Context context, AttributeSet attrs) {
+    /**
+     * Complete view setup
+     *
+     * @param context the view context
+     * @param attrs the style attributes from xml
+     */
+    private void init(Context context, AttributeSet attrs) {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-        if(attrs != null) {
-            TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SwappableImageView, 0, 0);
-            try {
-                setNext(a.getResourceId(R.styleable.SwappableImageView_src, 0));
-                setPrevious(a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
-                setNext(a.getResourceId(R.styleable.SwappableImageView_nextSrc, 0));
-                shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop, false);
-                Timber.d("looping: %s", shouldLoop);
-            } finally {
-                a.recycle();
-            }
+        if (attrs != null) initAttributes(context, attrs);
+        initListeners();
+        initViews(context);
+    }
+
+    /**
+     * Set up the initial config passes in from xml
+     *
+     * @param context the view context
+     * @param attrs the style attributes
+     */
+    protected void initAttributes(Context context,
+                                  @NonNull AttributeSet attrs) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
+                                                                 R.styleable.SwappableImageView,
+                                                                 0, 0);
+        try {
+            setNext(a.getResourceId(R.styleable.SwappableImageView_src, 0));
+            setPrevious(
+                    a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
+            setNext(a.getResourceId(R.styleable.SwappableImageView_nextSrc, 0));
+            shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop,
+                                      false);
+            Timber.d("looping: %s", shouldLoop);
+        } finally {
+            a.recycle();
         }
+    }
+
+    /**
+     * Set up the animation listeners
+     */
+    protected void initListeners() {
         animator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -85,7 +114,16 @@ public class SwappableImageView extends RelativeLayout {
                 dispatch(MESSAGE.UPDATE);
             }
         });
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    }
+
+    /**
+     * Set up the views used for swapping behaviour
+     *
+     * @param context the view context
+     */
+    protected void initViews(Context context) {
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
+                                                     LayoutParams.MATCH_PARENT);
         primary = new ImageView(context);
         secondary = new ImageView(context);
         addView(primary, layoutParams);
@@ -137,7 +175,8 @@ public class SwappableImageView extends RelativeLayout {
                 mBehaviour.onReset(primary, secondary);
                 break;
             case UPDATE:
-                mBehaviour.onUpdate(animator.getAnimatedFraction(), isReversing, primary, secondary);
+                mBehaviour.onUpdate(animator.getAnimatedFraction(), isReversing,
+                                    primary, secondary);
                 break;
             case ATTACH:
                 mBehaviour.onAttach(this);
@@ -267,7 +306,8 @@ public class SwappableImageView extends RelativeLayout {
         int min = 0;
         int max = mDrawables.size() - 1;
         int index = currentIndex + 1;
-        int nextIndex = isLooping() ? wrap(index, min, max) : bound(index, min, max);
+        int nextIndex = isLooping() ? wrap(index, min, max) : bound(index, min,
+                                                                    max);
         Timber.d("previous: %s, current: %s", nextIndex, currentIndex);
         return nextIndex;
     }
@@ -282,7 +322,8 @@ public class SwappableImageView extends RelativeLayout {
         int min = 0;
         int max = mDrawables.size() - 1;
         int index = currentIndex - 1;
-        int prevIndex = isLooping() ? wrap(index, min, max) : bound(index, min, max);
+        int prevIndex = isLooping() ? wrap(index, min, max) : bound(index, min,
+                                                                    max);
         Timber.d("previous: %s, current: %s", prevIndex, currentIndex);
         return prevIndex;
     }
@@ -360,7 +401,8 @@ public class SwappableImageView extends RelativeLayout {
          * @param primary the image view currently displayed
          * @param secondary the image view swapping in
          */
-        void onUpdate(float progress, boolean isReverse, ImageView primary, ImageView secondary);
+        void onUpdate(float progress, boolean isReverse, ImageView primary,
+                      ImageView secondary);
 
         /**
          * Called when the swapping is completed

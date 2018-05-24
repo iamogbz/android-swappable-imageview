@@ -3,14 +3,18 @@ package com.ogbizi.plucky;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.widget.ImageView;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.xmlpull.v1.XmlPullParser;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -21,14 +25,28 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class SwappableImageViewInstrumentedTest {
 
-    private SwappableImageView swappableImageView;
+    private MockSwappableImageView swappableImageView;
+    private Context mockContext;
+    private Integer[] mockResIds;
+    private AttributeSet mockAttrs;
 
     @Before
     public void setUp() throws Exception {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-        swappableImageView = new SwappableImageView(appContext);
-        swappableImageView.setDrawables(1, 1, 2, 3, 4);
+        mockContext = InstrumentationRegistry.getTargetContext();
+        mockResIds = new Integer[]{1, 2, 3, 4};
+        swappableImageView = new MockSwappableImageView(mockContext);
+        swappableImageView.setDrawables(1, mockResIds);
         swappableImageView.setLooping(false);
+
+        XmlPullParser parser = mockContext.getResources().getXml(
+                R.xml.mock_swappable_image_view);
+        try {
+            parser.next();
+            parser.nextTag();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mockAttrs = Xml.asAttributeSet(parser);
     }
 
     @After
@@ -37,10 +55,37 @@ public class SwappableImageViewInstrumentedTest {
     }
 
     @Test
+    public void init() {
+        Integer[] resIds = new Integer[]{
+                R.integer.one, R.integer.two, R.integer.three,
+            };
+        MockSwappableImageView view = spy(
+                new MockSwappableImageView(mockContext, mockAttrs));
+        assertEquals(1, view.getCurrentIndex());
+        assertArrayEquals(resIds, view.getDrawables().toArray(resIds));
+    }
+
+    @Test
     public void setBehavior() {
         SwappableImageBehavior b = mock(SwappableImageBehavior.class);
         swappableImageView.setBehavior(b);
         verify(b).onAttach(swappableImageView);
+    }
+
+    @Test
+    public void onLayout() {
+        SwappableImageBehavior b = mock(SwappableImageBehavior.class);
+        swappableImageView.setBehavior(b);
+        swappableImageView.onLayout(true, 0, 0, 0, 0);
+        verify(b).onReset(any(ImageView.class), any(ImageView.class));
+    }
+
+    @Test
+    public void onMeasure() {
+        MockSwappableImageView view = spy(
+                new MockSwappableImageView(mockContext));
+        view.onMeasure(0, 0);
+        verify(view).measureChildren(anyInt(), anyInt());
     }
 
     @Test
@@ -102,22 +147,49 @@ public class SwappableImageViewInstrumentedTest {
 
                 swappableImageView.setCurrentIndex(99);
                 swappableImageView.showNext(true);
-                verify(b1, never()).onStart(anyBoolean(), any(ImageView.class), any(ImageView.class));
+                verify(b1, never()).onStart(anyBoolean(), any(ImageView.class),
+                                            any(ImageView.class));
 
                 swappableImageView.setCurrentIndex(0);
                 swappableImageView.showNext(false);
-                verify(b1).onStart(eq(false), any(ImageView.class), any(ImageView.class));
+                verify(b1).onStart(eq(false), any(ImageView.class),
+                                   any(ImageView.class));
 
                 swappableImageView.setBehavior(b2);
 
                 swappableImageView.setCurrentIndex(0);
                 swappableImageView.showNext(false);
-                verify(b2, never()).onStart(anyBoolean(), any(ImageView.class), any(ImageView.class));
+                verify(b2, never()).onStart(anyBoolean(), any(ImageView.class),
+                                            any(ImageView.class));
 
                 swappableImageView.setLooping(true);
                 swappableImageView.showPrevious(true);
-                verify(b2).onEnd(eq(true), any(ImageView.class), any(ImageView.class));
+                verify(b2).onEnd(eq(true), any(ImageView.class),
+                                 any(ImageView.class));
             }
         }, 0);
+    }
+
+    private class MockSwappableImageView extends SwappableImageView {
+
+        public MockSwappableImageView(Context context) {
+            super(context);
+        }
+
+        public MockSwappableImageView(Context context, AttributeSet attrs) {
+            super(context, attrs);
+        }
+
+        @Override
+        protected void measureChildren(int widthMeasureSpec,
+                                       int heightMeasureSpec) {
+            super.measureChildren(widthMeasureSpec, heightMeasureSpec);
+        }
+
+        @Override
+        protected void initAttributes(Context context,
+                                      @NonNull AttributeSet attrs) {
+            super.initAttributes(context, attrs);
+        }
     }
 }
