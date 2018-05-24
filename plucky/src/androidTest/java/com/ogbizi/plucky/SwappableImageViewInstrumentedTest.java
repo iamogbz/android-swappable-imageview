@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @RunWith(AndroidJUnit4.class)
-public class SwappableImageViewTest {
+public class SwappableImageViewInstrumentedTest {
 
     private SwappableImageView swappableImageView;
 
