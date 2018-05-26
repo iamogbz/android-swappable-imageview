@@ -21,14 +21,14 @@ import timber.log.Timber;
  */
 public class SwappableImageView extends RelativeLayout {
 
+    private final List<Integer> mDrawables = new LinkedList<>();
     private boolean isReversing = false;
     private boolean shouldLoop = false;
     private int currentIndex = -1;
-    private ImageView primary;
-    private ImageView secondary;
-    private final List<Integer> mDrawables = new LinkedList<>();
     private ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
     private Behavior mBehaviour;
+    protected ImageView primary;
+    protected ImageView secondary;
 
     public SwappableImageView(Context context) {
         this(context, null);
