@@ -67,14 +67,14 @@ public class SwappableImageViewInstrumentedTest {
 
     @Test
     public void setBehavior() {
-        SwappableImageBehavior b = mock(SwappableImageBehavior.class);
+        HorizontalSwappableImageBehavior b = mock(HorizontalSwappableImageBehavior.class);
         swappableImageView.setBehavior(b);
         verify(b).onAttach(swappableImageView);
     }
 
     @Test
     public void onLayout() {
-        SwappableImageBehavior b = mock(SwappableImageBehavior.class);
+        HorizontalSwappableImageBehavior b = mock(HorizontalSwappableImageBehavior.class);
         swappableImageView.setBehavior(b);
         swappableImageView.onLayout(true, 0, 0, 0, 0);
         verify(b).onReset(any(ImageView.class), any(ImageView.class));
@@ -138,8 +138,8 @@ public class SwappableImageViewInstrumentedTest {
     @Test
     public void showNextAndPrevious() {
         final SwappableImageView swappableImageView = this.swappableImageView;
-        final SwappableImageBehavior b1 = mock(SwappableImageBehavior.class);
-        final SwappableImageBehavior b2 = mock(SwappableImageBehavior.class);
+        final HorizontalSwappableImageBehavior b1 = mock(HorizontalSwappableImageBehavior.class);
+        final HorizontalSwappableImageBehavior b2 = mock(HorizontalSwappableImageBehavior.class);
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {

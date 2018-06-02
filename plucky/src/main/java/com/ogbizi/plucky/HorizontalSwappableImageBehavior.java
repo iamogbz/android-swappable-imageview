@@ -9,7 +9,11 @@ import java.util.List;
 
 import timber.log.Timber;
 
-public class SwappableImageBehavior implements Behavior {
+/**
+ * Sample implementation of swappable image behavior
+ * Swaps images by sliding horizontally out of view
+ */
+public class HorizontalSwappableImageBehavior implements Behavior {
     private SwappableImageView mView;
 
     @Override

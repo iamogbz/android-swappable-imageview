@@ -78,6 +78,8 @@ public class SwappableImageView extends RelativeLayout {
             shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop,
                                       false);
             Timber.d("looping: %s", shouldLoop);
+        } catch (Exception e) {
+            Timber.e(e);
         } finally {
             a.recycle();
         }
@@ -128,7 +130,7 @@ public class SwappableImageView extends RelativeLayout {
         secondary = new ImageView(context);
         addView(primary, layoutParams);
         addView(secondary, layoutParams);
-        setBehavior(new SwappableImageBehavior());
+        setBehavior(new HorizontalSwappableImageBehavior());
     }
 
     @Override
@@ -369,7 +371,7 @@ public class SwappableImageView extends RelativeLayout {
      */
     public interface Behavior {
         /**
-         * Called when behaviour is attached to a view
+         * Called when behaviour is attached to {@link SwappableImageView}
          *
          * @param view the swappable image view attached
          */
@@ -407,7 +409,7 @@ public class SwappableImageView extends RelativeLayout {
         /**
          * Called when the swapping is completed
          *
-         * @param isReverse if the swap just happened in reverse as with #showPrevious
+         * @param isReverse if the swap just happened in reverse as with {@link #showPrevious}
          * @param primary the image view just removed from view
          * @param secondary the image view just swapped into view
          */
