@@ -1,4 +1,4 @@
-package com.ogbizi.plucky;
+package com.ogbizi.swappable_imageview;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -38,8 +38,7 @@ public class SwappableImageView extends RelativeLayout {
         this(context, attrs, 0);
     }
 
-    public SwappableImageView(Context context, AttributeSet attrs,
-                              int defStyleAttr) {
+    public SwappableImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
@@ -48,13 +47,14 @@ public class SwappableImageView extends RelativeLayout {
      * Complete view setup
      *
      * @param context the view context
-     * @param attrs the style attributes from xml
+     * @param attrs   the style attributes from xml
      */
     private void init(Context context, AttributeSet attrs) {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-        if (attrs != null) initAttributes(context, attrs);
+        if (attrs != null)
+            initAttributes(context, attrs);
         initListeners();
         initViews(context);
     }
@@ -63,20 +63,15 @@ public class SwappableImageView extends RelativeLayout {
      * Set up the initial config passes in from xml
      *
      * @param context the view context
-     * @param attrs the style attributes
+     * @param attrs   the style attributes
      */
-    protected void initAttributes(Context context,
-                                  @NonNull AttributeSet attrs) {
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs,
-                                                                 R.styleable.SwappableImageView,
-                                                                 0, 0);
+    protected void initAttributes(Context context, @NonNull AttributeSet attrs) {
+        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SwappableImageView, 0, 0);
         try {
             setNext(a.getResourceId(R.styleable.SwappableImageView_src, 0));
-            setPrevious(
-                    a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
+            setPrevious(a.getResourceId(R.styleable.SwappableImageView_prevSrc, 0));
             setNext(a.getResourceId(R.styleable.SwappableImageView_nextSrc, 0));
-            shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop,
-                                      false);
+            shouldLoop = a.getBoolean(R.styleable.SwappableImageView_loop, false);
             Timber.d("looping: %s", shouldLoop);
         } catch (Exception e) {
             Timber.e(e);
@@ -124,8 +119,7 @@ public class SwappableImageView extends RelativeLayout {
      * @param context the view context
      */
     protected void initViews(Context context) {
-        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT,
-                                                     LayoutParams.MATCH_PARENT);
+        LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         primary = new ImageView(context);
         secondary = new ImageView(context);
         addView(primary, layoutParams);
@@ -164,32 +158,31 @@ public class SwappableImageView extends RelativeLayout {
      */
     private void dispatch(MESSAGE message) {
         switch (message) {
-            case END:
-                mBehaviour.onEnd(isReversing, primary, secondary);
-                break;
-            case START:
-                mBehaviour.onStart(isReversing, primary, secondary);
-                break;
-            case CANCEL:
-                mBehaviour.onCancel(primary, secondary);
-                break;
-            case RESET:
-                mBehaviour.onReset(primary, secondary);
-                break;
-            case UPDATE:
-                mBehaviour.onUpdate(animator.getAnimatedFraction(), isReversing,
-                                    primary, secondary);
-                break;
-            case ATTACH:
-                mBehaviour.onAttach(this);
-                break;
+        case END:
+            mBehaviour.onEnd(isReversing, primary, secondary);
+            break;
+        case START:
+            mBehaviour.onStart(isReversing, primary, secondary);
+            break;
+        case CANCEL:
+            mBehaviour.onCancel(primary, secondary);
+            break;
+        case RESET:
+            mBehaviour.onReset(primary, secondary);
+            break;
+        case UPDATE:
+            mBehaviour.onUpdate(animator.getAnimatedFraction(), isReversing, primary, secondary);
+            break;
+        case ATTACH:
+            mBehaviour.onAttach(this);
+            break;
         }
     }
 
     /**
      * Set the ordered list of drawables used for selecting next and previous
      *
-     * @param index the position to reset to
+     * @param index     the position to reset to
      * @param drawables the list of drawables use
      */
     public void setDrawables(int index, @DrawableRes Integer... drawables) {
@@ -254,12 +247,11 @@ public class SwappableImageView extends RelativeLayout {
     }
 
     /**
-     * Limit value to bound range.
-     * Example #bound(-4, 0, 10) = 0
+     * Limit value to bound range. Example #bound(-4, 0, 10) = 0
      *
      * @param value the value to limit
-     * @param min the minimum value allowed
-     * @param max the maximum value allowed
+     * @param min   the minimum value allowed
+     * @param max   the maximum value allowed
      * @return the range limited value
      */
     private static int bound(int value, int min, int max) {
@@ -267,12 +259,11 @@ public class SwappableImageView extends RelativeLayout {
     }
 
     /**
-     * Wraps an integer value around a range
-     * Example #wrap(-4, 0, 10) = 10
+     * Wraps an integer value around a range Example #wrap(-4, 0, 10) = 10
      *
      * @param value the value to wrap
-     * @param min the minimum value allowed
-     * @param max the maximum value allowed
+     * @param min   the minimum value allowed
+     * @param max   the maximum value allowed
      * @return the range limited value
      */
     private static int wrap(int value, int min, int max) {
@@ -308,8 +299,7 @@ public class SwappableImageView extends RelativeLayout {
         int min = 0;
         int max = mDrawables.size() - 1;
         int index = currentIndex + 1;
-        int nextIndex = isLooping() ? wrap(index, min, max) : bound(index, min,
-                                                                    max);
+        int nextIndex = isLooping() ? wrap(index, min, max) : bound(index, min, max);
         Timber.d("previous: %s, current: %s", nextIndex, currentIndex);
         return nextIndex;
     }
@@ -324,8 +314,7 @@ public class SwappableImageView extends RelativeLayout {
         int min = 0;
         int max = mDrawables.size() - 1;
         int index = currentIndex - 1;
-        int prevIndex = isLooping() ? wrap(index, min, max) : bound(index, min,
-                                                                    max);
+        int prevIndex = isLooping() ? wrap(index, min, max) : bound(index, min, max);
         Timber.d("previous: %s, current: %s", prevIndex, currentIndex);
         return prevIndex;
     }
@@ -378,10 +367,10 @@ public class SwappableImageView extends RelativeLayout {
         void onAttach(SwappableImageView view);
 
         /**
-         * Reset the state of the swap image views. Should be called when layout
-         * changes occur.
+         * Reset the state of the swap image views. Should be called when layout changes
+         * occur.
          *
-         * @param primary the current image view
+         * @param primary   the current image view
          * @param secondary the image view used for swapping
          */
         void onReset(ImageView primary, ImageView secondary);
@@ -390,7 +379,7 @@ public class SwappableImageView extends RelativeLayout {
          * Called at the start of the swap
          *
          * @param isReverse if the swap is happening in reverse
-         * @param primary the image view currently displayed
+         * @param primary   the image view currently displayed
          * @param secondary the image view to swap in
          */
         void onStart(boolean isReverse, ImageView primary, ImageView secondary);
@@ -398,19 +387,19 @@ public class SwappableImageView extends RelativeLayout {
         /**
          * Update the swapping process with progress
          *
-         * @param progress the current progress of the swap as float between 0..1
+         * @param progress  the current progress of the swap as float between 0..1
          * @param isReverse if true then the swap is playing from completion to onStart
-         * @param primary the image view currently displayed
+         * @param primary   the image view currently displayed
          * @param secondary the image view swapping in
          */
-        void onUpdate(float progress, boolean isReverse, ImageView primary,
-                      ImageView secondary);
+        void onUpdate(float progress, boolean isReverse, ImageView primary, ImageView secondary);
 
         /**
          * Called when the swapping is completed
          *
-         * @param isReverse if the swap just happened in reverse as with {@link #showPrevious}
-         * @param primary the image view just removed from view
+         * @param isReverse if the swap just happened in reverse as with
+         *                  {@link #showPrevious}
+         * @param primary   the image view just removed from view
          * @param secondary the image view just swapped into view
          */
         void onEnd(boolean isReverse, ImageView primary, ImageView secondary);
@@ -418,7 +407,7 @@ public class SwappableImageView extends RelativeLayout {
         /**
          * Called when the swap is cancelled
          *
-         * @param primary the image view that was currently displayed
+         * @param primary   the image view that was currently displayed
          * @param secondary the image view that was swapping in
          */
         void onCancel(ImageView primary, ImageView secondary);

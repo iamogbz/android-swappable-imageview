@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
-import com.ogbizi.plucky.SwappableImageView;
+import com.ogbizi.swappable_imageview.SwappableImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String link = "http://github.com/iamogbz/plucky";
+                final String link = "http://github.com/iamogbz/swappable_imageview";
                 Snackbar.make(view, "Checkout `" + link + "` for more", Snackbar.LENGTH_LONG).setAction("Visit", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

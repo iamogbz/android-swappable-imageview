@@ -1,4 +1,4 @@
-package com.ogbizi.plucky;
+package com.ogbizi.swappable_imageview;
 
 import org.junit.Test;
 

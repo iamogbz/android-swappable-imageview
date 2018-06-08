@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true">
 
-        <com.ogbizi.plucky.SwappableImageView
+        <com.ogbizi.swappable_imageview.SwappableImageView
             android:id="@+id/img_swappable"
             android:layout_width="48dp"
             android:layout_height="48dp"

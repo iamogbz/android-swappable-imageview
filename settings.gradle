@@ -1,1 +1,1 @@
-include ':app', ':plucky'
+include ':app', ':swappable_imageview'

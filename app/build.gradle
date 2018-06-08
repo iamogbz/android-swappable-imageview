@@ -20,7 +20,7 @@ android {
 }
 
 dependencies {
-    implementation project(':plucky')
+    implementation project(':swappable_imageview')
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.jakewharton.timber:timber:4.7.0'
     implementation 'com.android.support:appcompat-v7:27.1.1'
