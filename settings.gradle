@@ -1,1 +1,1 @@
-include ':app', ':swappable_imageview'
+include ':app', ':android_swappable_imageview'
