@@ -1,0 +1,110 @@
+apply plugin: 'com.android.library'
+apply plugin: 'jacoco'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+def props = new Properties()
+file('build.properties').withInputStream { props.load(it) }
+
+def projectGroup = props.getProperty('project.group')
+def projectVersion = props.getProperty('project.version')
+def bintrayToken = props.getProperty('bintray.token')
+
+group = projectGroup
+version = projectVersion
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName projectVersion
+        testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+    buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.jakewharton.timber:timber:4.7.0'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.18.3'
+    androidTestImplementation 'org.mockito:mockito-android:2.18.3'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def debugTree = fileTree(dir: '$project.buildDir/intermediates/classes/debug', excludes: fileFilter)
+    def mainSrc = '$project.projectDir/src/main/java'
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
+}
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs classifier 'sources'
+}
+
+task generateJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(
+            android.getBootClasspath().join(File.pathSeparator)
+    )
+}
+
+task generateJavadocsJar(type: Jar) {
+    from generateJavadocs.destinationDir classifier 'javadoc'
+}
+
+generateJavadocsJar.dependsOn generateJavadocs
+
+artifacts {
+    archives generateJavadocsJar
+    archives generateSourcesJar
+}
+
+bintray {
+    user = 'iamogbz'
+    key = bintrayToken
+    pkg {
+        repo = 'android-swappable-imageview'
+        name = projectGroup
+
+        version {
+            name = projectVersion
+            desc = 'Android view with extendable image swapping behaviour'
+            released = new Date()
+            vcsTag = projectVersion
+        }
+
+        licenses = ['GPL-3.0']
+        vcsUrl = 'git@github.com:iamogbz/android-swappable-imageview.git'
+        websiteUrl = 'https://github.com/iamogbz/android-swappable-imageview'
+    }
+    configurations = ['archives']
+}
