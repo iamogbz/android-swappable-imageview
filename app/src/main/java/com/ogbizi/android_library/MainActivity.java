@@ -13,7 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
 
-import com.ogbizi.swappable_imageview.SwappableImageView;
+import com.ogbizi.android_swappable_imageview.SwappableImageView;
 
 public class MainActivity extends AppCompatActivity {
 

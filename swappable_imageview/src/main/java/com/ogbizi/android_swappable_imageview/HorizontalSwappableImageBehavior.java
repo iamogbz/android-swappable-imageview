@@ -1,9 +1,9 @@
-package com.ogbizi.swappable_imageview;
+package com.ogbizi.android_swappable_imageview;
 
 import android.view.View;
 import android.widget.ImageView;
 
-import com.ogbizi.swappable_imageview.SwappableImageView.Behavior;
+import com.ogbizi.android_swappable_imageview.SwappableImageView.Behavior;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.ogbizi.swappable_imageview;
+package com.ogbizi.android_swappable_imageview;
 
 import org.junit.Test;
 
